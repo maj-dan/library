@@ -14,7 +14,38 @@ body {
     min-height: 100vh;
 }
 
+header {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-areas:
+    ". title button"
+    ;
+    align-items: center;
+    justify-items: center;
+
+    background-color: #ffcccc;
+}
+
+h1 {
+    grid-area: title;
+    font-size: 5rem;
+}
+
+header > button {
+    grid-area: button;
+    justify-self: end;
+    align-self: end;
+    margin: 0 16px 16px 0;
+}
+
 main {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    padding: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+main > div {
+    background-color: #ccffcc;
+    height: 200px;
 }
