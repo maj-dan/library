@@ -10,10 +10,40 @@
 <body>
     <header>
         <h1>Library</h1>
-        <button>Add Book</button>
+        <button id="add-book-btn">Add Book</button>
     </header>
     <main>
-        
+        <dialog id="book-dialog">
+            <form>
+                <p>
+                    <label for="book-title">Book title:</label>
+                    <input type="text" name="book-title" id="book-title">
+                </p>
+                <p>
+                    <label for="book-author">Book Author:</label>
+                    <input type="text" name="book-author" id="book-author">
+                </p>
+                <P>
+                    <label for="pages"></label>
+                    <input type="number" name="pages" id="pages">
+                </P>
+                <p>
+                    <fieldset>
+                        <legend>Have you read it?</legend>
+
+                        <input type="radio" name="was-read" id="read" value="true">
+                        <label for="read">Yes</label>
+
+                        <input type="radio" name="was-read" id="not-read" value="true" checked>
+                        <label for="not-read">No</label>
+                    </fieldset>
+                </p>
+                <p>
+                    <button>Cancel</button>
+                    <button>Add</button>
+                </p>
+            </form>
+        </dialog>
     </main>
 </body>
 </html>
