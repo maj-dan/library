@@ -11,7 +11,7 @@ function Book(title, author, pages, wasRead) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.wasRead = wasRead;
+    this.wasRead = wasRead === "true" ? true: false;
 }
 
 function addBookToLibrary(title, author, pages, wasRead) {
@@ -20,6 +20,8 @@ function addBookToLibrary(title, author, pages, wasRead) {
 
 function displayBooks() {
     const booksContainer = document.querySelector("main");
+    const displayedBooks = booksContainer.querySelectorAll("div");
+    displayedBooks.forEach(book => book.remove());
 
     for (book of myLibrary) {
         const card = document.createElement("div");
@@ -31,7 +33,8 @@ function displayBooks() {
         title.textContent = book.title;
         author.textContent = "Author: " + book.author;
         pages.textContent = "Pages: " + book.pages;
-        wasRead.textContent = book.wasRead ? "Already read!" : "Not read yet!";
+        wasRead.textContent = book.wasRead ?
+         "Already read!" : "Not read yet!";
 
         card.appendChild(title);
         card.appendChild(author);
@@ -66,10 +69,9 @@ function executeAddBook(event) {
     const readRadio = bookDialog.querySelector("input[type=radio]#read");
     const notReadRadio = bookDialog.querySelector("input[type=radio]#not-read");
     if(readRadio.checked) {
-        valuesArray.push({value: readRadio.value, required: readRadio.required});
+        valuesArray.push({value: "true", required: readRadio.required});
     } else {
-        valuesArray.push({value: notReadRadio.value, 
-                        required: notReadRadio.required});
+        valuesArray.push({value: "false", required: notReadRadio.required});
     }
     notReadRadio.checked = true;
 
@@ -93,6 +95,9 @@ function executeAddBook(event) {
         }
         return string + `,${object.value}`;
     }, "");
+
+    addBookToLibrary(...(bookDialog.returnValue.split(",")));
+    displayBooks();
 }
 
 /*addBookToLibrary("Book 1", "Author 1", 562, false);
