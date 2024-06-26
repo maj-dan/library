@@ -2,17 +2,16 @@ const myLibrary = [];
 
 const bookDialog = document.querySelector("#book-dialog");
 const addBookBtn = document.querySelector("#add-book-btn");
+const actionsContainer = document.querySelector("#dialog-actions");
 
 addBookBtn.addEventListener("click", () => bookDialog.showModal());
+actionsContainer.addEventListener("click", executeAddBook);
 
 function Book(title, author, pages, wasRead) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.wasRead = wasRead;
-    this.info = function () {
-        return `${this.title} by ${this.author}, ${this.pages} pages, ${wasRead ? "already read" : "not read yet"};`
-    };
 }
 
 function addBookToLibrary(title, author, pages, wasRead) {
@@ -43,8 +42,61 @@ function displayBooks() {
     }
 }
 
-addBookToLibrary("Book 1", "Author 1", 562, false);
+function executeAddBook(event) {
+    let buttonValue;
+    if(event.target.tagName === "BUTTON") {
+        buttonValue = `${event.target.value}`;
+    } else {
+        return;
+    }
+
+    const valuesArray = [];
+
+    //get values and reset inputs
+    const textInputs = bookDialog.querySelectorAll("input[type=text]");
+    textInputs.forEach(input => {
+        valuesArray.push({value: input.value, required: input.required});
+        input.value = "";
+    });
+
+    const numberInput = bookDialog.querySelector("input[type=number]");
+    valuesArray.push({value: numberInput.value, required: numberInput.required});
+    numberInput.value = "";
+
+    const readRadio = bookDialog.querySelector("input[type=radio]#read");
+    const notReadRadio = bookDialog.querySelector("input[type=radio]#not-read");
+    if(readRadio.checked) {
+        valuesArray.push({value: readRadio.value, required: readRadio.required});
+    } else {
+        valuesArray.push({value: notReadRadio.value, 
+                        required: notReadRadio.required});
+    }
+    notReadRadio.checked = true;
+
+    event.preventDefault();
+    if(buttonValue === "cancel") {
+        bookDialog.close();
+        return;
+    }
+
+    for(object of valuesArray) {
+        if(object.value === "" && object.required) {
+            //display invalid input message for user
+            return;
+        }
+    }
+
+    bookDialog.close();
+    bookDialog.returnValue = valuesArray.reduce((string, object) => {
+        if (string === ""){
+            return object.value;
+        }
+        return string + `,${object.value}`;
+    }, "");
+}
+
+/*addBookToLibrary("Book 1", "Author 1", 562, false);
 addBookToLibrary("Book 2", "Author 2", 200, true);
 addBookToLibrary("Book 3", "Author 3", 1025, false);
 
-displayBooks();
+displayBooks();*/
