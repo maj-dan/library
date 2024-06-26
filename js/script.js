@@ -23,23 +23,35 @@ function displayBooks() {
     const displayedBooks = booksContainer.querySelectorAll("div");
     displayedBooks.forEach(book => book.remove());
 
-    for (book of myLibrary) {
+    for (let i = 0; i < myLibrary.length; i++) {
+        const book = myLibrary[i];
+
         const card = document.createElement("div");
         const title = document.createElement("h2");
         const author = document.createElement("p");
         const pages = document.createElement("p");
         const wasRead = document.createElement("p");
+        const removeBtn = document.createElement("button");
+
+        removeBtn.setAttribute("class", "close-btn");
+        card.setAttribute("data-index", `${i}`);
 
         title.textContent = book.title;
-        author.textContent = "Author: " + book.author;
-        pages.textContent = "Pages: " + book.pages;
+        author.textContent = `Author: ${book.author ?
+                            book.author: "Unknown"}`;
+        pages.textContent = `Pages: ${book.pages ?
+                            book.pages: "Unknown"}`;
         wasRead.textContent = book.wasRead ?
-         "Already read!" : "Not read yet!";
+                            "Already read!" : "Not read yet!";
+        removeBtn.textContent = "x";
 
         card.appendChild(title);
         card.appendChild(author);
         card.appendChild(pages);
         card.appendChild(wasRead);
+        card.appendChild(removeBtn);
+
+        card.addEventListener("click", executeCardActions);
 
         booksContainer.appendChild(card);
     }
@@ -98,10 +110,17 @@ function executeAddBook(event) {
 
     addBookToLibrary(...(bookDialog.returnValue.split(",")));
     displayBooks();
+    bookDialog.returnValue = "";
 }
 
-/*addBookToLibrary("Book 1", "Author 1", 562, false);
-addBookToLibrary("Book 2", "Author 2", 200, true);
-addBookToLibrary("Book 3", "Author 3", 1025, false);
-
-displayBooks();*/
+function executeCardActions(event) {
+    let buttonValue;
+    if(event.target.tagName === "BUTTON") {
+        buttonValue = `${event.target.value}`;
+    } else {
+        return;
+    }
+    const indexToRemove = parseInt(this.dataset.index);
+    myLibrary.splice(indexToRemove, 1);
+    this.remove();
+}
