@@ -11,7 +11,7 @@ function Book(title, author, pages, wasRead) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.wasRead = wasRead === "true" ? true: false;
+    this.wasRead = (wasRead === "true") ? true: false;
 }
 
 function addBookToLibrary(title, author, pages, wasRead) {
@@ -32,8 +32,11 @@ function displayBooks() {
         const pages = document.createElement("p");
         const wasRead = document.createElement("p");
         const removeBtn = document.createElement("button");
+        const toggleReadBtn = document.createElement("button");
 
         removeBtn.setAttribute("class", "close-btn");
+        removeBtn.setAttribute("value", "remove");
+        toggleReadBtn.setAttribute("class", "toggle-read");
         card.setAttribute("data-index", `${i}`);
 
         title.textContent = book.title;
@@ -44,12 +47,15 @@ function displayBooks() {
         wasRead.textContent = book.wasRead ?
                             "Already read!" : "Not read yet!";
         removeBtn.textContent = "x";
+        toggleReadBtn.textContent = book.wasRead ?
+                            "Mark not read" : "Mark read";
 
         card.appendChild(title);
         card.appendChild(author);
         card.appendChild(pages);
         card.appendChild(wasRead);
         card.appendChild(removeBtn);
+        card.appendChild(toggleReadBtn);
 
         card.addEventListener("click", executeCardActions);
 
@@ -120,7 +126,14 @@ function executeCardActions(event) {
     } else {
         return;
     }
-    const indexToRemove = parseInt(this.dataset.index);
-    myLibrary.splice(indexToRemove, 1);
-    this.remove();
+
+    const bookIndex = parseInt(this.dataset.index);
+
+    if(buttonValue === "remove"){
+        myLibrary.splice(bookIndex, 1);
+    } else {
+        myLibrary[bookIndex].wasRead = !(myLibrary[bookIndex].wasRead);
+    }
+    
+    displayBooks();
 }
