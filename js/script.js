@@ -20,7 +20,7 @@ function addBookToLibrary(title, author, pages, wasRead) {
 
 function displayBooks() {
     const booksContainer = document.querySelector("main");
-    const displayedBooks = booksContainer.querySelectorAll("div");
+    const displayedBooks = booksContainer.querySelectorAll("div:not(#radio-container)");
     displayedBooks.forEach(book => book.remove());
 
     for (let i = 0; i < myLibrary.length; i++) {
