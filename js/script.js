@@ -44,9 +44,31 @@ class Library {
             card.appendChild(removeBtn);
             card.appendChild(toggleReadBtn);
     
-            /* card.addEventListener("click", executeCardActions); */
+            card.addEventListener("click", this.cardActions());
     
             booksContainer.appendChild(card);
+        }
+    }
+
+    static cardActions(){
+        return function (event) {
+            let buttonValue;
+            if(event.target.tagName === "BUTTON") {
+                buttonValue = `${event.target.value}`;
+            } else {
+                return;
+            }
+        
+            const bookIndex = parseInt(this.dataset.index);
+        
+            if(buttonValue === "remove"){
+                Library.books.splice(bookIndex, 1);
+            } else {
+                Library.books[bookIndex].wasRead = !(Library.books[bookIndex]
+                    .wasRead);
+            }
+            
+            Library.render();
         }
     }
 }
