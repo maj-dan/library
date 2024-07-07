@@ -1,4 +1,67 @@
-const myLibrary = [];
+class Library {
+    static books = [];
+
+    addBook() {
+        Library.books.push(this);
+    }
+
+    static render() {
+        const booksContainer = document.querySelector("main");
+        const displayedBooks = booksContainer.querySelectorAll("div:not(#radio-container)");
+        displayedBooks.forEach(book => book.remove());
+    
+        for (let i = 0; i < this.books.length; i++) {
+            const book = this.books[i];
+    
+            const card = document.createElement("div");
+            const title = document.createElement("h2");
+            const author = document.createElement("p");
+            const pages = document.createElement("p");
+            const wasRead = document.createElement("p");
+            const removeBtn = document.createElement("button");
+            const toggleReadBtn = document.createElement("button");
+    
+            removeBtn.setAttribute("class", "close-btn");
+            removeBtn.setAttribute("value", "remove");
+            toggleReadBtn.setAttribute("class", "toggle-read");
+            card.setAttribute("data-index", `${i}`);
+    
+            title.textContent = book.title;
+            author.textContent = `Author: ${book.author ?
+                                book.author: "Unknown"}`;
+            pages.textContent = `Pages: ${book.pages ?
+                                book.pages: "Unknown"}`;
+            wasRead.textContent = book.wasRead ?
+                                "Already read!" : "Not read yet!";
+            removeBtn.textContent = "x";
+            toggleReadBtn.textContent = book.wasRead ?
+                                "Mark not read" : "Mark read";
+    
+            card.appendChild(title);
+            card.appendChild(author);
+            card.appendChild(pages);
+            card.appendChild(wasRead);
+            card.appendChild(removeBtn);
+            card.appendChild(toggleReadBtn);
+    
+            /* card.addEventListener("click", executeCardActions); */
+    
+            booksContainer.appendChild(card);
+        }
+    }
+}
+
+class Book extends Library{
+    constructor(title, author, pages, wasRead){
+        super();
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.wasRead = (wasRead === "true") ? true: false;
+    }
+}
+
+/* const myLibrary = [];
 
 const bookDialog = document.querySelector("#book-dialog");
 const addBookBtn = document.querySelector("#add-book-btn");
@@ -136,4 +199,4 @@ function executeCardActions(event) {
     }
     
     displayBooks();
-}
+} */
