@@ -5,6 +5,15 @@ class Library {
         Library.books.push(this);
     }
 
+    static init() {
+        this.bookDialog = document.querySelector("#book-dialog");
+        this.addBookBtn = document.querySelector("#add-book-btn");
+        this.actionsContainer = document.querySelector("#dialog-actions");
+
+        this.addBookBtn.addEventListener("click", () => this.bookDialog.showModal());
+        /* this.actionsContainer.addEventListener("click", executeAddBook); */
+    }
+
     static render() {
         const booksContainer = document.querySelector("main");
         const displayedBooks = booksContainer.querySelectorAll("div:not(#radio-container)");
