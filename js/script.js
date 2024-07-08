@@ -11,7 +11,7 @@ class Library {
         this.actionsContainer = document.querySelector("#dialog-actions");
 
         this.addBookBtn.addEventListener("click", () => this.bookDialog.showModal());
-        /* this.actionsContainer.addEventListener("click", executeAddBook); */
+        this.actionsContainer.addEventListener("click", this.getExecuteAddBook());
     }
 
     static render() {
@@ -53,13 +53,13 @@ class Library {
             card.appendChild(removeBtn);
             card.appendChild(toggleReadBtn);
     
-            card.addEventListener("click", this.cardActions());
+            card.addEventListener("click", this.getCardActions());
     
             booksContainer.appendChild(card);
         }
     }
 
-    static cardActions(){
+    static getCardActions(){
         return function (event) {
             let buttonValue;
             if(event.target.tagName === "BUTTON") {
@@ -80,6 +80,69 @@ class Library {
             Library.render();
         }
     }
+
+    static getExecuteAddBook(){
+        return function(event) {
+            let buttonValue;
+            if(event.target.tagName === "BUTTON") {
+                buttonValue = `${event.target.value}`;
+            } else {
+                return;
+            }
+        
+            const valuesArray = [];
+        
+            //get values and reset inputs
+            const textInputs = Library.bookDialog
+                    .querySelectorAll("input[type=text]");
+            textInputs.forEach(input => {
+                valuesArray.push({value: input.value, required: input.required});
+                input.value = "";
+            });
+        
+            const numberInput = Library.bookDialog
+                    .querySelector("input[type=number]");
+            valuesArray
+                    .push({value: numberInput.value, required: numberInput.required});
+            numberInput.value = "";
+        
+            const readRadio = Library.bookDialog
+                    .querySelector("input[type=radio]#read");
+            const notReadRadio = Library.bookDialog
+                    .querySelector("input[type=radio]#not-read");
+            if(readRadio.checked) {
+                valuesArray.push({value: "true", required: readRadio.required});
+            } else {
+                valuesArray.push({value: "false", required: notReadRadio.required});
+            }
+            notReadRadio.checked = true;
+        
+            event.preventDefault();
+            if(buttonValue === "cancel") {
+                Library.bookDialog.close();
+                return;
+            }
+        
+            for(const object of valuesArray) {
+                if(object.value === "" && object.required) {
+                    alert("There is required information that hasn't been filled!")
+                    return;
+                }
+            }
+        
+            Library.bookDialog.close();
+            Library.bookDialog.returnValue = valuesArray.reduce((string, object) => {
+                if (string === ""){
+                    return object.value;
+                }
+                return string + `,${object.value}`;
+            }, "");
+        
+            (new Book(...(Library.bookDialog.returnValue.split(",")))).addBook();
+            Library.render();
+            Library.bookDialog.returnValue = "";
+        }
+    }
 }
 
 class Book extends Library{
@@ -91,6 +154,8 @@ class Book extends Library{
         this.wasRead = (wasRead === "true") ? true: false;
     }
 }
+
+Library.init();
 
 /* const myLibrary = [];
 

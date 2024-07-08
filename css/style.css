@@ -240,3 +240,8 @@ main > div > button {
     background-color: var(--emerald-100);
     outline: none;
 }
+
+label[for="book-title"]::after {
+    content: "*";
+    color: var(--emerald-500);
+}
